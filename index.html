@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
@@ -28,96 +29,220 @@
 </head>
 
 <body>
+
     <div class="container py-5">
+
         <div class="row justify-content-center">
+
             <div class="col-md-6">
+
                 <div class="card p-4">
 
-                    <h2 class="text-center mb-4">Registro de Gato</h2>
+                    <h2 class="text-center mb-4">
+                        Registro de Gato
+                    </h2>
 
                     <form id="formGato">
 
+                        <!-- Nombre -->
                         <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" required placeholder="Ej: Michi">
+                            <label class="form-label">
+                                Nombre
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nombre"
+                                required
+                                placeholder="Ej: Michi">
                         </div>
 
+                        <!-- Propietario -->
                         <div class="mb-3">
-                            <label class="form-label">Edad (años)</label>
-                            <input type="number" class="form-control" id="edad" required min="0" step="0.1"
+                            <label class="form-label">
+                                Propietario
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="propietario"
+                                required
+                                placeholder="Ej: Juan Pérez">
+                        </div>
+
+                        <!-- Edad -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Edad (años)
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="edad"
+                                required
+                                min="0"
+                                step="0.1"
                                 placeholder="Ej: 2.5">
                         </div>
 
+                        <!-- Peso -->
                         <div class="mb-3">
-                            <label class="form-label">Peso (kg)</label>
-                            <input type="number" class="form-control" id="peso" required min="0" step="0.1"
+                            <label class="form-label">
+                                Peso (kg)
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="peso"
+                                required
+                                min="0"
+                                step="0.1"
                                 placeholder="Ej: 4.2">
                         </div>
 
+                        <!-- Raza -->
                         <div class="mb-3">
-                            <label class="form-label">Raza</label>
-                            <input type="text" class="form-control" id="raza" required placeholder="Ej: Siames">
+                            <label class="form-label">
+                                Raza
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="raza"
+                                required
+                                placeholder="Ej: Siamés">
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100">
                             Registrar Gato
                         </button>
+
                     </form>
 
-                    <!-- Mensaje del backend -->
-                    <div id="resultado" class="alert alert-success mt-4" role="alert"></div>
+                    <!-- Resultado -->
+                    <div
+                        id="resultado"
+                        class="alert alert-success mt-4"
+                        role="alert">
+                    </div>
 
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <script>
-        // Cambia esta URL por la de tu backend en Render
-        const BACKEND_URL = "https://backend-gato-03dp.onrender.com/gato";
 
-        document.getElementById("formGato").addEventListener("submit", async (e) => {
-            e.preventDefault();
+        // URL del backend desplegado en Render
+        const BACKEND_URL =
+            "https://backend-gato-03dp.onrender.com/gato";
 
-            const datos = {
-                nombre: document.getElementById("nombre").value.trim(),
-                edad: Number(document.getElementById("edad").value),
-                peso: Number(document.getElementById("peso").value),
-                raza: document.getElementById("raza").value.trim()
-            };
+        document
+            .getElementById("formGato")
+            .addEventListener("submit", async (e) => {
 
-            const resultadoDiv = document.getElementById("resultado");
-            resultadoDiv.style.display = "none";
+                e.preventDefault();
 
-            try {
-                const respuesta = await fetch(BACKEND_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(datos)
-                });
+                const datos = {
 
-                const data = await respuesta.json();
+                    nombre: document
+                        .getElementById("nombre")
+                        .value
+                        .trim(),
 
-                if (respuesta.ok) {
-                    resultadoDiv.className = "alert alert-success mt-4";
-                    resultadoDiv.textContent = data.mensaje;
-                } else {
-                    resultadoDiv.className = "alert alert-danger mt-4";
+                    propietario: document
+                        .getElementById("propietario")
+                        .value
+                        .trim(),
+
+                    edad: Number(
+                        document.getElementById("edad").value
+                    ),
+
+                    peso: Number(
+                        document.getElementById("peso").value
+                    ),
+
+                    raza: document
+                        .getElementById("raza")
+                        .value
+                        .trim()
+                };
+
+                const resultadoDiv =
+                    document.getElementById("resultado");
+
+                resultadoDiv.style.display = "none";
+
+                try {
+
+                    const respuesta = await fetch(BACKEND_URL, {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(datos)
+
+                    });
+
+                    const data = await respuesta.json();
+
+                    if (respuesta.ok) {
+
+                        resultadoDiv.className =
+                            "alert alert-success mt-4";
+
+                        resultadoDiv.textContent =
+                            data.mensaje;
+
+                        // Limpiar formulario después de registrar
+                        document
+                            .getElementById("formGato")
+                            .reset();
+
+                    } else {
+
+                        resultadoDiv.className =
+                            "alert alert-danger mt-4";
+
+                        resultadoDiv.textContent =
+                            data.mensaje ||
+                            "Error al registrar el gato";
+                    }
+
+                    resultadoDiv.style.display = "block";
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    resultadoDiv.className =
+                        "alert alert-danger mt-4";
+
                     resultadoDiv.textContent =
-                        data.mensaje || "Error al registrar el gato";
+                        "Error de conexión con el servidor.";
+
+                    resultadoDiv.style.display = "block";
                 }
 
-                resultadoDiv.style.display = "block";
+            });
 
-            } catch (error) {
-                resultadoDiv.className = "alert alert-danger mt-4";
-                resultadoDiv.textContent = "Error de conexión con el servidor.";
-                resultadoDiv.style.display = "block";
-            }
-        });
     </script>
+
 </body>
 
 </html>
+
