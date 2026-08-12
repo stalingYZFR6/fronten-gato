@@ -5,78 +5,956 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Gato</title>
+
+    <title>GATO DATABASE</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
 
     <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+
+        :root {
+            --purple: #8b5cf6;
+            --purple-dark: #5b21b6;
+            --pink: #ec4899;
+            --cyan: #22d3ee;
+            --yellow: #facc15;
+            --dark: #17121f;
+            --panel: #241b31;
         }
 
-        .card {
-            border: none;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        * {
+            box-sizing: border-box;
         }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: "Nunito", sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(236, 72, 153, .25),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(34, 211, 238, .18),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    135deg,
+                    #120d18,
+                    #251537 45%,
+                    #100c17
+                );
+
+            overflow-x: hidden;
+        }
+
+
+        /* ==========================================
+           NECO PATTERN
+        ========================================== */
+
+        body::before {
+            content: "NECO  NECO  NECO  NECO  NECO  NECO  NECO";
+
+            position: fixed;
+
+            width: 200%;
+            height: 100%;
+
+            top: 0;
+            left: -30%;
+
+            display: flex;
+            align-items: center;
+
+            font-family: "Press Start 2P", monospace;
+            font-size: 55px;
+
+            line-height: 2;
+
+            color: rgba(255, 255, 255, .025);
+
+            transform: rotate(-18deg);
+
+            pointer-events: none;
+            z-index: 0;
+        }
+
+
+        /* ==========================================
+           FLOATING DECORATION
+        ========================================== */
+
+        .floating {
+            position: fixed;
+
+            font-size: 50px;
+
+            opacity: .35;
+
+            pointer-events: none;
+
+            z-index: 0;
+
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .f1 {
+            top: 7%;
+            left: 5%;
+        }
+
+        .f2 {
+            top: 18%;
+            right: 5%;
+            animation-delay: 1s;
+        }
+
+        .f3 {
+            bottom: 8%;
+            left: 7%;
+            animation-delay: 2s;
+        }
+
+        .f4 {
+            bottom: 12%;
+            right: 8%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(7deg);
+            }
+        }
+
+
+        /* ==========================================
+           MAIN
+        ========================================== */
+
+        .page {
+            position: relative;
+
+            z-index: 2;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 35px 15px;
+        }
+
+
+        /* ==========================================
+           MAIN CARD
+        ========================================== */
+
+        .neco-card {
+            width: 100%;
+            max-width: 1050px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1.15fr;
+
+            background: rgba(36, 27, 49, .92);
+
+            border: 2px solid rgba(255, 255, 255, .1);
+
+            border-radius: 28px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 35px 100px rgba(0, 0, 0, .5),
+                0 0 70px rgba(139, 92, 246, .12);
+
+            backdrop-filter: blur(20px);
+
+            animation: appear .8s ease;
+        }
+
+        @keyframes appear {
+
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+
+        /* ==========================================
+           LEFT PANEL
+        ========================================== */
+
+        .character-panel {
+            position: relative;
+
+            min-height: 700px;
+
+            padding: 30px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    160deg,
+                    #7c3aed,
+                    #a21caf 45%,
+                    #ec4899
+                );
+
+            overflow: hidden;
+        }
+
+        .character-panel::before {
+            content: "";
+
+            position: absolute;
+
+            width: 350px;
+            height: 350px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,.07);
+
+            top: -160px;
+            left: -130px;
+        }
+
+        .character-panel::after {
+            content: "";
+
+            position: absolute;
+
+            width: 400px;
+            height: 400px;
+
+            border-radius: 50%;
+
+            background: rgba(0,0,0,.08);
+
+            bottom: -220px;
+            right: -170px;
+        }
+
+
+        /* ==========================================
+           TITLE
+        ========================================== */
+
+        .mini-title {
+            position: relative;
+
+            z-index: 2;
+
+            padding: 7px 14px;
+
+            border-radius: 100px;
+
+            background: rgba(0,0,0,.2);
+
+            border: 1px solid rgba(255,255,255,.2);
+
+            font-family: "Press Start 2P", monospace;
+
+            font-size: 9px;
+
+            letter-spacing: 1px;
+        }
+
+        .main-title {
+            position: relative;
+
+            z-index: 2;
+
+            margin: 18px 0 5px;
+
+            font-size: 42px;
+
+            font-weight: 900;
+
+            line-height: 1;
+
+            text-shadow:
+                4px 4px 0 rgba(0,0,0,.18);
+        }
+
+        .main-title span {
+            color: var(--yellow);
+        }
+
+        .subtitle {
+            position: relative;
+
+            z-index: 2;
+
+            max-width: 330px;
+
+            margin-bottom: 15px;
+
+            color: rgba(255,255,255,.85);
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+
+        /* ==========================================
+           CHARACTER IMAGES
+        ========================================== */
+
+        .characters {
+            position: relative;
+
+            z-index: 2;
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: end;
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 5px;
+        }
+
+        .character {
+            position: relative;
+
+            width: 47%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: end;
+        }
+
+        .character img {
+            width: 100%;
+            max-width: 210px;
+
+            height: 270px;
+
+            object-fit: contain;
+
+            border-radius: 22px;
+
+            filter:
+                drop-shadow(0 20px 15px rgba(0,0,0,.25));
+
+            transition:
+                transform .3s ease,
+                filter .3s ease;
+        }
+
+        .character:hover img {
+            transform:
+                translateY(-10px)
+                rotate(2deg)
+                scale(1.04);
+
+            filter:
+                drop-shadow(0 25px 20px rgba(0,0,0,.4));
+        }
+
+
+        /* ==========================================
+           CHARACTER LABELS
+        ========================================== */
+
+        .char-label {
+            position: absolute;
+
+            bottom: 8px;
+
+            padding: 6px 12px;
+
+            border-radius: 10px;
+
+            background: rgba(0,0,0,.72);
+
+            border: 1px solid rgba(255,255,255,.2);
+
+            font-family: "Press Start 2P", monospace;
+
+            font-size: 7px;
+
+            color: white;
+        }
+
+
+        /* ==========================================
+           MEME TEXT
+        ========================================== */
+
+        .meme {
+            position: relative;
+
+            z-index: 2;
+
+            margin-top: 12px;
+
+            padding: 8px 15px;
+
+            border-radius: 10px;
+
+            background: rgba(0,0,0,.25);
+
+            font-family: "Press Start 2P", monospace;
+
+            font-size: 8px;
+
+            color: #fff;
+
+            animation: shake 3s infinite;
+        }
+
+        @keyframes shake {
+
+            0%, 90%, 100% {
+                transform: rotate(0);
+            }
+
+            92% {
+                transform: rotate(-2deg);
+            }
+
+            94% {
+                transform: rotate(2deg);
+            }
+
+            96% {
+                transform: rotate(-2deg);
+            }
+        }
+
+
+        /* ==========================================
+           FORM AREA
+        ========================================== */
+
+        .form-panel {
+            padding: 50px 55px;
+        }
+
+        .form-heading {
+            margin-bottom: 30px;
+        }
+
+        .form-heading .emoji {
+            font-size: 35px;
+        }
+
+        .form-heading h2 {
+            margin: 8px 0 3px;
+
+            font-size: 30px;
+
+            font-weight: 900;
+        }
+
+        .form-heading p {
+            margin: 0;
+
+            color: #a99db8;
+
+            font-size: 14px;
+        }
+
+
+        /* ==========================================
+           INPUTS
+        ========================================== */
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #dcd2e6;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box span {
+            position: absolute;
+
+            left: 16px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 18px;
+
+            z-index: 2;
+        }
+
+        .form-control {
+            height: 52px;
+
+            padding-left: 47px;
+
+            color: white;
+
+            background: #17121f;
+
+            border: 1px solid #3a2e49;
+
+            border-radius: 14px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            transition: .25s;
+        }
+
+        .form-control::placeholder {
+            color: #685c76;
+        }
+
+        .form-control:focus {
+            color: white;
+
+            background: #1b1524;
+
+            border-color: var(--pink);
+
+            box-shadow:
+                0 0 0 4px rgba(236,72,153,.1),
+                0 8px 25px rgba(236,72,153,.08);
+        }
+
+
+        /* ==========================================
+           BUTTON
+        ========================================== */
+
+        .btn-neco {
+            position: relative;
+
+            width: 100%;
+
+            height: 58px;
+
+            margin-top: 8px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #7c3aed,
+                    #ec4899
+                );
+
+            box-shadow:
+                0 12px 30px rgba(236,72,153,.2);
+
+            overflow: hidden;
+
+            transition: .25s;
+        }
+
+        .btn-neco:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 18px 35px rgba(236,72,153,.35);
+        }
+
+        .btn-neco:active {
+            transform: scale(.98);
+        }
+
+        .btn-neco::after {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: -100%;
+
+            width: 60%;
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,.35),
+                    transparent
+                );
+
+            transform: skewX(-20deg);
+
+            transition: .6s;
+        }
+
+        .btn-neco:hover::after {
+            left: 140%;
+        }
+
+
+        /* ==========================================
+           RESULT
+        ========================================== */
 
         #resultado {
             display: none;
+
+            margin-top: 20px;
+
+            padding: 15px 18px;
+
+            border-radius: 14px;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            animation: result .35s ease;
         }
+
+        .success {
+            color: #bbf7d0;
+
+            background: rgba(16,185,129,.12);
+
+            border: 1px solid rgba(16,185,129,.25);
+        }
+
+        .error {
+            color: #fecdd3;
+
+            background: rgba(244,63,94,.12);
+
+            border: 1px solid rgba(244,63,94,.25);
+        }
+
+        @keyframes result {
+
+            from {
+                opacity: 0;
+                transform: translateY(-7px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* ==========================================
+           FOOTER
+        ========================================== */
+
+        .footer {
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #665b72;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .footer span {
+            color: #ec4899;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 850px) {
+
+            .neco-card {
+                grid-template-columns: 1fr;
+            }
+
+            .character-panel {
+                min-height: 570px;
+            }
+
+            .form-panel {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .page {
+                padding: 15px 10px;
+            }
+
+            .neco-card {
+                border-radius: 20px;
+            }
+
+            .character-panel {
+                padding: 25px 15px;
+            }
+
+            .main-title {
+                font-size: 34px;
+            }
+
+            .characters {
+                gap: 0;
+            }
+
+            .character img {
+                height: 220px;
+            }
+
+            .form-panel {
+                padding: 30px 20px;
+            }
+
+            .form-heading h2 {
+                font-size: 25px;
+            }
+        }
+
     </style>
 </head>
 
+
 <body>
 
-    <div class="container py-5">
+    <!-- ==========================================
+         FLOATING MEMES
+    ========================================== -->
 
-        <div class="row justify-content-center">
+    <div class="floating f1">🐾</div>
+    <div class="floating f2">😺</div>
+    <div class="floating f3">✨</div>
+    <div class="floating f4">🐈</div>
 
-            <div class="col-md-6">
 
-                <div class="card p-4">
+    <main class="page">
 
-                    <h2 class="text-center mb-4">
+        <div class="neco-card">
+
+
+            <!-- ======================================
+                 CHARACTER SIDE
+            ======================================= -->
+
+            <section class="character-panel">
+
+                <div class="mini-title">
+                    GATO DATABASE v1.0
+                </div>
+
+
+                <h1 class="main-title">
+                    GATO<span>ZZZ</span>
+                </h1>
+
+
+                <p class="subtitle">
+                    Sistema oficial de registro de criaturas
+                    peludas, caóticas y posiblemente peligrosas.
+                </p>
+
+
+                <div class="characters">
+
+
+                    <!-- NECO ARC -->
+
+                    <div class="character">
+
+                        <img
+                            src="https://miro.medium.com/1%2An_F7pEJWw5diSoqW4yHn2g.png"
+                            alt="Neco-Arc">
+
+                        <div class="char-label">
+                           NYA
+                        </div>
+
+                    </div>
+
+
+                    <!-- YANI NEKO -->
+
+                    <div class="character">
+
+                        <img
+                            src="https://image.p-c2-x.abema-tv.com/image/programs/632-8_s1_p1/thumb002.png?background=000000&fit=fill&height=432&quality=75&version=1784174260&width=768"
+                            alt="Yani Neko">
+
+                        <div class="char-label">
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="meme">
+                    ฅ^•ﻌ•^ฅ
+                </div>
+
+            </section>
+
+
+
+            <!-- ======================================
+                 FORM
+            ======================================= -->
+
+            <section class="form-panel">
+
+                <div class="form-heading">
+
+                    <div class="emoji">
+                        
+                    </div>
+
+                    <h2>
                         Registro de Gato
                     </h2>
 
-                    <form id="formGato">
+                    <p>
+                        Introduce los datos del espécimen.
+                    </p>
 
-                        <!-- Nombre -->
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Nombre
-                            </label>
+                </div>
+
+
+                <form id="formGato">
+
+
+                    <!-- NOMBRE -->
+
+                    <div class="field">
+
+                        <label for="nombre">
+                            😺 Nombre del gato
+                        </label>
+
+                        <div class="input-box">
+
+                            <span>🐾</span>
 
                             <input
                                 type="text"
                                 class="form-control"
                                 id="nombre"
                                 required
-                                placeholder="Ej: Michi">
+                                autocomplete="off"
+                                placeholder="Ej: Neco, Michi, Garfield...">
+
                         </div>
 
-                        <!-- Propietario -->
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Propietario
-                            </label>
+                    </div>
+
+
+                    <!-- PROPIETARIO -->
+
+                    <div class="field">
+
+                        <label for="propietario">
+                            👤 Propietario
+                        </label>
+
+                        <div class="input-box">
+
+                            <span></span>
 
                             <input
                                 type="text"
                                 class="form-control"
                                 id="propietario"
                                 required
+                                autocomplete="name"
                                 placeholder="Ej: Juan Pérez">
+
                         </div>
 
-                        <!-- Edad -->
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Edad (años)
-                            </label>
+                    </div>
+
+
+                    <!-- EDAD -->
+
+                    <div class="field">
+
+                        <label for="edad">
+                            🎂 Edad
+                        </label>
+
+                        <div class="input-box">
+
+                            <span>🎂</span>
 
                             <input
                                 type="number"
@@ -86,13 +964,23 @@
                                 min="0"
                                 step="0.1"
                                 placeholder="Ej: 2.5">
+
                         </div>
 
-                        <!-- Peso -->
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Peso (kg)
-                            </label>
+                    </div>
+
+
+                    <!-- PESO -->
+
+                    <div class="field">
+
+                        <label for="peso">
+                            ⚖️ Peso
+                        </label>
+
+                        <div class="input-box">
+
+                            <span>⚖️</span>
 
                             <input
                                 type="number"
@@ -102,147 +990,260 @@
                                 min="0"
                                 step="0.1"
                                 placeholder="Ej: 4.2">
+
                         </div>
 
-                        <!-- Raza -->
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Raza
-                            </label>
+                    </div>
+
+
+                    <!-- RAZA -->
+
+                    <div class="field">
+
+                        <label for="raza">
+                            🧬 Raza
+                        </label>
+
+                        <div class="input-box">
+
+                            <span>🐈</span>
 
                             <input
                                 type="text"
                                 class="form-control"
                                 id="raza"
                                 required
+                                autocomplete="off"
                                 placeholder="Ej: Siamés">
+
                         </div>
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary w-100">
-                            Registrar Gato
-                        </button>
-
-                    </form>
-
-                    <!-- Resultado -->
-                    <div
-                        id="resultado"
-                        class="alert alert-success mt-4"
-                        role="alert">
                     </div>
 
+
+                    <!-- BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="btn-neco"
+                        id="btnRegistrar">
+
+                        🐾 REGISTRAR AL DEUDOR
+
+                    </button>
+
+                </form>
+
+
+                <!-- RESULTADO -->
+
+                <div
+                    id="resultado"
+                    role="alert">
                 </div>
 
-            </div>
+
+            </section>
 
         </div>
 
-    </div>
+    </main>
+
 
     <script>
 
-        // URL del backend desplegado en Render
+        // ==========================================
+        // BACKEND
+        // ==========================================
+
         const BACKEND_URL =
             "https://backend-gato-03dp.onrender.com/gato";
 
-        document
-            .getElementById("formGato")
-            .addEventListener("submit", async (e) => {
 
-                e.preventDefault();
+        // ==========================================
+        // ELEMENTS
+        // ==========================================
 
-                const datos = {
+        const form =
+            document.getElementById("formGato");
 
-                    nombre: document
+        const resultadoDiv =
+            document.getElementById("resultado");
+
+        const btnRegistrar =
+            document.getElementById("btnRegistrar");
+
+
+        // ==========================================
+        // SUBMIT
+        // ==========================================
+
+        form.addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+
+            const datos = {
+
+                nombre:
+                    document
                         .getElementById("nombre")
                         .value
                         .trim(),
 
-                    propietario: document
+                propietario:
+                    document
                         .getElementById("propietario")
                         .value
                         .trim(),
 
-                    edad: Number(
-                        document.getElementById("edad").value
+                edad:
+                    Number(
+                        document
+                            .getElementById("edad")
+                            .value
                     ),
 
-                    peso: Number(
-                        document.getElementById("peso").value
+                peso:
+                    Number(
+                        document
+                            .getElementById("peso")
+                            .value
                     ),
 
-                    raza: document
+                raza:
+                    document
                         .getElementById("raza")
                         .value
                         .trim()
-                };
 
-                const resultadoDiv =
-                    document.getElementById("resultado");
+            };
 
-                resultadoDiv.style.display = "none";
 
-                try {
+            // ======================================
+            // LOADING
+            // ======================================
 
-                    const respuesta = await fetch(BACKEND_URL, {
+            resultadoDiv.style.display = "none";
 
-                        method: "POST",
+            btnRegistrar.disabled = true;
 
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+            btnRegistrar.innerHTML =
+                "⏳ REGISTRANDO MICHI...";
 
-                        body: JSON.stringify(datos)
 
-                    });
+            try {
 
-                    const data = await respuesta.json();
+                const respuesta =
+                    await fetch(
+                        BACKEND_URL,
+                        {
+                            method: "POST",
 
-                    if (respuesta.ok) {
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-                        resultadoDiv.className =
-                            "alert alert-success mt-4";
+                            body:
+                                JSON.stringify(datos)
+                        }
+                    );
 
-                        resultadoDiv.textContent =
-                            data.mensaje;
 
-                        // Limpiar formulario después de registrar
-                        document
-                            .getElementById("formGato")
-                            .reset();
+                const data =
+                    await respuesta.json();
 
-                    } else {
 
-                        resultadoDiv.className =
-                            "alert alert-danger mt-4";
+                // ==================================
+                // SUCCESS
+                // ==================================
 
-                        resultadoDiv.textContent =
-                            data.mensaje ||
-                            "Error al registrar el gato";
-                    }
-
-                    resultadoDiv.style.display = "block";
-
-                } catch (error) {
-
-                    console.error(error);
+                if (respuesta.ok) {
 
                     resultadoDiv.className =
-                        "alert alert-danger mt-4";
+                        "success";
 
-                    resultadoDiv.textContent =
-                        "Error de conexión con el servidor.";
+                    resultadoDiv.innerHTML = `
+                        😺 <strong>¡NECO REGISTRADO!</strong>
+                        <br><br>
+                        ${data.mensaje ||
+                        "El gato ha sido añadido correctamente a la NECO DATABASE."}
+                    `;
 
-                    resultadoDiv.style.display = "block";
+                    resultadoDiv.style.display =
+                        "block";
+
+
+                    form.reset();
+
+                    btnRegistrar.innerHTML =
+                        "✨ REGISTRAR OTRO MICHI";
+
                 }
 
-            });
+
+                // ==================================
+                // BACKEND ERROR
+                // ==================================
+
+                else {
+
+                    resultadoDiv.className =
+                        "error";
+
+                    resultadoDiv.innerHTML = `
+                        😿 <strong>ERROR 404: MICHI NO REGISTRADO</strong>
+                        <br><br>
+                        ${data.mensaje ||
+                        "El servidor rechazó el registro."}
+                    `;
+
+                    resultadoDiv.style.display =
+                        "block";
+
+                    btnRegistrar.innerHTML =
+                        "🐾 REGISTRAR AL MICHI";
+                }
+
+            }
+
+
+            // ======================================
+            // CONNECTION ERROR
+            // ======================================
+
+            catch (error) {
+
+                console.error(error);
+
+                resultadoDiv.className =
+                    "error";
+
+                resultadoDiv.innerHTML = `
+                    💀 <strong>NECO SERVER DOWN</strong>
+                    <br><br>
+                    No se pudo contactar con el backend.
+                    <br>
+                    El michi está atrapado en otra dimensión.
+                `;
+
+                resultadoDiv.style.display =
+                    "block";
+
+                btnRegistrar.innerHTML =
+                    "🐾 INTENTAR NUEVAMENTE";
+
+            }
+
+
+            btnRegistrar.disabled = false;
+
+        });
 
     </script>
 
 </body>
 
 </html>
-
+```
