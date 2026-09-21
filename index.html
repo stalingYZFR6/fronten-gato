@@ -1,509 +1,212 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Gatos</title>
+<script>
 
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  >
+  // =====================================================
+  // URL DEL BACKEND
+  // =====================================================
 
-  <style>
-    body {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
+  const BACKEND_URL =
+    "https://backend-gato-03dp.onrender.com";
+
+
+  // =====================================================
+  // ELEMENTOS
+  // =====================================================
+
+  const formGato =
+    document.getElementById("formGato");
+
+  const gatoId =
+    document.getElementById("gatoId");
+
+  const nombre =
+    document.getElementById("nombre");
+
+  const edad =
+    document.getElementById("edad");
+
+  const peso =
+    document.getElementById("peso");
+
+  const raza =
+    document.getElementById("raza");
+
+  const imagen =
+    document.getElementById("imagen");
+
+  const preview =
+    document.getElementById("preview");
+
+  const btnSubmit =
+    document.getElementById("btnSubmit");
+
+  const btnCancelar =
+    document.getElementById("btnCancelar");
+
+  const resultadoDiv =
+    document.getElementById("resultado");
+
+
+  // =====================================================
+  // VISTA PREVIA DE IMAGEN
+  // =====================================================
+
+  imagen.addEventListener("change", (e) => {
+
+    const file = e.target.files[0];
+
+    if (file) {
+
+      preview.src =
+        URL.createObjectURL(file);
+
+      preview.style.display =
+        "block";
+
     }
 
-    .card {
-      border: none;
-      border-radius: 1rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .gato-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .gato-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    }
-
-    .gato-img {
-      height: 180px;
-      object-fit: cover;
-      border-top-left-radius: 1rem;
-      border-top-right-radius: 1rem;
-    }
-
-    #resultado {
-      display: none;
-    }
-
-    #preview {
-      max-width: 100%;
-      max-height: 180px;
-      margin-top: 10px;
-      border-radius: 8px;
-      display: none;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: #6c757d;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container-fluid py-4 px-3 px-md-4">
-    <div class="row g-4">
-
-      <!-- FORMULARIO -->
-      <div class="col-12 col-lg-4">
-        <div class="card p-4">
-
-          <h2 class="text-center mb-4">
-            Registro de Gato
-          </h2>
-
-          <form id="formGato">
-
-            <div class="mb-3">
-              <label class="form-label">Nombre</label>
-
-              <input
-                type="text"
-                class="form-control"
-                id="nombre"
-                required
-                placeholder="Ej: Michi"
-              >
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">
-                Edad (años)
-              </label>
-
-              <input
-                type="number"
-                class="form-control"
-                id="edad"
-                required
-                min="0"
-                step="0.1"
-                placeholder="Ej: 2.5"
-              >
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">
-                Peso (kg)
-              </label>
-
-              <input
-                type="number"
-                class="form-control"
-                id="peso"
-                required
-                min="0"
-                step="0.1"
-                placeholder="Ej: 4.2"
-              >
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">
-                Raza
-              </label>
-
-              <input
-                type="text"
-                class="form-control"
-                id="raza"
-                required
-                placeholder="Ej: Siamés"
-              >
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">
-                Imagen del gato
-              </label>
-
-              <input
-                type="file"
-                class="form-control"
-                id="imagen"
-                accept="image/*"
-                required
-              >
-
-              <img
-                id="preview"
-                alt="Vista previa"
-              >
-            </div>
-
-            <button
-              type="submit"
-              class="btn btn-primary w-100"
-            >
-              Registrar Gato
-            </button>
-
-          </form>
-
-          <div
-            id="resultado"
-            class="alert mt-4"
-            role="alert"
-          ></div>
-
-        </div>
-      </div>
+  });
 
 
-      <!-- TARJETAS DE GATOS -->
-      <div class="col-12 col-lg-8">
+  // =====================================================
+  // SUBMIT DEL FORMULARIO
+  // REGISTRAR O ACTUALIZAR
+  // =====================================================
 
-        <div
-          class="d-flex justify-content-between align-items-center mb-3"
-        >
+  formGato.addEventListener(
+    "submit",
+    async (e) => {
 
-          <h2 class="mb-0">
-            Gatos Registrados
-          </h2>
+      e.preventDefault();
 
-          <button
-            class="btn btn-outline-secondary btn-sm"
-            id="btnRecargar"
-          >
-            Actualizar
-          </button>
-
-        </div>
-
-        <div
-          id="listaGatos"
-          class="row g-3"
-        >
-          <div class="col-12 loading">
-            Cargando gatos...
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
+      resultadoDiv.style.display =
+        "none";
 
 
-  <!-- JAVASCRIPT -->
-  <script>
-
-    // =====================================================
-    // URL DEL BACKEND
-    // =====================================================
-
-    const BACKEND_URL =
-      "https://backend-gato-03dp.onrender.com";
+      const formData =
+        new FormData();
 
 
-    // =====================================================
-    // VISTA PREVIA DE LA IMAGEN
-    // =====================================================
+      formData.append(
+        "nombre",
+        nombre.value.trim()
+      );
 
-    document
-      .getElementById("imagen")
-      .addEventListener("change", (e) => {
+      formData.append(
+        "edad",
+        edad.value
+      );
 
-        const file = e.target.files[0];
-        const preview = document.getElementById("preview");
+      formData.append(
+        "peso",
+        peso.value
+      );
 
-        if (file) {
-
-          preview.src = URL.createObjectURL(file);
-          preview.style.display = "block";
-
-        } else {
-
-          preview.src = "";
-          preview.style.display = "none";
-
-        }
-
-      });
+      formData.append(
+        "raza",
+        raza.value.trim()
+      );
 
 
-    // =====================================================
-    // REGISTRAR GATO
-    // =====================================================
+      // =================================================
+      // IMAGEN
+      // =================================================
 
-    document
-      .getElementById("formGato")
-      .addEventListener("submit", async (e) => {
-
-        e.preventDefault();
-
-        const resultadoDiv =
-          document.getElementById("resultado");
-
-        resultadoDiv.style.display = "none";
-
-
-        // Crear FormData
-        const formData = new FormData();
+      if (imagen.files.length > 0) {
 
         formData.append(
-          "nombre",
-          document
-            .getElementById("nombre")
-            .value
-            .trim()
+          "imagen",
+          imagen.files[0]
         );
 
-        formData.append(
-          "edad",
-          document.getElementById("edad").value
-        );
-
-        formData.append(
-          "peso",
-          document.getElementById("peso").value
-        );
-
-        formData.append(
-          "raza",
-          document
-            .getElementById("raza")
-            .value
-            .trim()
-        );
+      }
 
 
-        // Obtener imagen
-        const imagenInput =
-          document.getElementById("imagen");
+      // =================================================
+      // DETERMINAR SI ES REGISTRO O EDICIÓN
+      // =================================================
+
+      const id =
+        gatoId.value;
 
 
-        if (imagenInput.files.length > 0) {
-
-          formData.append(
-            "imagen",
-            imagenInput.files[0]
-          );
-
-        }
+      const esEdicion =
+        id !== "";
 
 
-        try {
+      const url =
+        esEdicion
+          ? `${BACKEND_URL}/gato/${id}`
+          : `${BACKEND_URL}/gato`;
 
-          // POST /gato
-          const respuesta = await fetch(
-            `${BACKEND_URL}/gato`,
+
+      const metodo =
+        esEdicion
+          ? "PUT"
+          : "POST";
+
+
+      try {
+
+        btnSubmit.disabled = true;
+
+        btnSubmit.textContent =
+          esEdicion
+            ? "Actualizando..."
+            : "Registrando...";
+
+
+        const respuesta =
+          await fetch(
+            url,
             {
-              method: "POST",
+              method: metodo,
               body: formData
             }
           );
 
 
-          const data = await respuesta.json();
-
-
-          if (respuesta.ok) {
-
-            resultadoDiv.className =
-              "alert alert-success mt-4";
-
-            resultadoDiv.innerHTML =
-              data.mensaje +
-              (
-                data.imagenUrl
-                  ? `<br>
-                     <img
-                       src="${data.imagenUrl}"
-                       style="
-                         max-width:100%;
-                         margin-top:10px;
-                         border-radius:8px;
-                       "
-                     >`
-                  : ""
-              );
-
-
-            // Limpiar formulario
-            document
-              .getElementById("formGato")
-              .reset();
-
-
-            // Ocultar preview
-            document
-              .getElementById("preview")
-              .style.display = "none";
-
-
-            // Actualizar lista
-            cargarGatos();
-
-          } else {
-
-            resultadoDiv.className =
-              "alert alert-danger mt-4";
-
-            resultadoDiv.textContent =
-              data.mensaje ||
-              "Error al registrar el gato.";
-
-          }
-
-
-          resultadoDiv.style.display = "block";
-
-
-        } catch (error) {
-
-          console.error(
-            "Error:",
-            error
-          );
-
-
-          resultadoDiv.className =
-            "alert alert-danger mt-4";
-
-          resultadoDiv.textContent =
-            "Error de conexión con el servidor.";
-
-          resultadoDiv.style.display =
-            "block";
-
-        }
-
-      });
-
-
-    // =====================================================
-    // CARGAR GATOS
-    // =====================================================
-
-    async function cargarGatos() {
-
-      const contenedor =
-        document.getElementById("listaGatos");
-
-
-      contenedor.innerHTML =
-        `<div class="col-12 loading">
-          Cargando gatos...
-        </div>`;
-
-
-      try {
-
-        // GET /gatos
-        const respuesta = await fetch(
-          `${BACKEND_URL}/gatos`
-        );
-
-
-        const gatos =
+        const data =
           await respuesta.json();
 
 
         if (!respuesta.ok) {
 
           throw new Error(
-            gatos.mensaje ||
-            "Error al obtener gatos"
+            data.mensaje ||
+            "Ocurrió un error."
           );
 
         }
 
 
-        // Si no hay gatos
-        if (gatos.length === 0) {
+        // =================================================
+        // MENSAJE DE ÉXITO
+        // =================================================
 
-          contenedor.innerHTML = `
-            <div class="col-12">
-              <div class="alert alert-info text-center">
-                Aún no hay gatos registrados.
-              </div>
-            </div>
-          `;
+        resultadoDiv.className =
+          "alert alert-success mt-4";
 
-          return;
-
-        }
+        resultadoDiv.textContent =
+          data.mensaje;
 
 
-        // Crear tarjetas
-        contenedor.innerHTML = gatos
-          .map(
-            (gato) => `
+        resultadoDiv.style.display =
+          "block";
 
-              <div class="col-12 col-sm-6 col-xl-4">
 
-                <div class="card gato-card h-100">
+        // =================================================
+        // LIMPIAR FORMULARIO
+        // =================================================
 
-                  <img
-                    src="${gato.imagenUrl}"
-                    class="card-img-top gato-img"
-                    alt="${gato.nombre}"
-                    onerror="
-                      this.src='https://via.placeholder.com/400x300?text=Sin+imagen'
-                    "
-                  >
+        limpiarFormulario();
 
-                  <div class="card-body">
 
-                    <h5 class="card-title mb-1">
-                      ${gato.nombre}
-                    </h5>
+        // =================================================
+        // RECARGAR GATOS
+        // =================================================
 
-                    <p class="card-text mb-1">
+        await cargarGatos();
 
-                      <small class="text-muted">
-                        ${gato.raza}
-                        ·
-                        ${gato.edad} años
-                        ·
-                        ${gato.peso} kg
-                      </small>
-
-                    </p>
-
-                    <p class="card-text">
-
-                      <small class="text-muted">
-
-                        Registrado:
-                        ${
-                          new Date(gato.fecha)
-                            .toLocaleDateString("es-ES")
-                        }
-
-                      </small>
-
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            `
-          )
-          .join("");
 
       } catch (error) {
 
@@ -513,45 +216,404 @@
         );
 
 
-        contenedor.innerHTML = `
+        resultadoDiv.className =
+          "alert alert-danger mt-4";
 
-          <div class="col-12">
+        resultadoDiv.textContent =
+          error.message ||
+          "Error de conexión con el servidor.";
 
-            <div class="alert alert-danger text-center">
+        resultadoDiv.style.display =
+          "block";
 
-              Error al cargar los gatos.
-              Intenta de nuevo.
+      } finally {
 
-            </div>
+        btnSubmit.disabled =
+          false;
 
-          </div>
-
-        `;
+        btnSubmit.textContent =
+          "Registrar Gato";
 
       }
 
     }
+  );
 
 
-    // =====================================================
-    // BOTÓN ACTUALIZAR
-    // =====================================================
+  // =====================================================
+  // CARGAR GATOS
+  // =====================================================
 
-    document
-      .getElementById("btnRecargar")
-      .addEventListener(
-        "click",
-        cargarGatos
+  async function cargarGatos() {
+
+    const contenedor =
+      document.getElementById(
+        "listaGatos"
       );
 
 
-    // =====================================================
-    // CARGAR GATOS AL ABRIR LA PÁGINA
-    // =====================================================
+    contenedor.innerHTML = `
+      <div class="col-12 loading">
+        Cargando gatos...
+      </div>
+    `;
 
-    cargarGatos();
 
-  </script>
+    try {
 
-</body>
-</html>
+      const respuesta =
+        await fetch(
+          `${BACKEND_URL}/gatos`
+        );
+
+
+      const gatos =
+        await respuesta.json();
+
+
+      if (!respuesta.ok) {
+
+        throw new Error(
+          gatos.mensaje ||
+          "Error al obtener gatos"
+        );
+
+      }
+
+
+      // =================================================
+      // NO HAY GATOS
+      // =================================================
+
+      if (gatos.length === 0) {
+
+        contenedor.innerHTML = `
+          <div class="col-12">
+
+            <div class="alert alert-info text-center">
+
+              Aún no hay gatos registrados.
+
+            </div>
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      // =================================================
+      // CREAR TARJETAS
+      // =================================================
+
+      contenedor.innerHTML =
+        gatos.map(
+          (gato) => `
+
+            <div class="col-12 col-sm-6 col-xl-4">
+
+              <div class="card gato-card h-100">
+
+                <img
+                  src="${gato.imagenUrl}"
+                  class="card-img-top gato-img"
+                  alt="${gato.nombre}"
+                  onerror="
+                    this.src='https://via.placeholder.com/400x300?text=Sin+imagen'
+                  "
+                >
+
+                <div class="card-body">
+
+                  <h5 class="card-title mb-1">
+                    ${gato.nombre}
+                  </h5>
+
+                  <p class="card-text mb-1">
+
+                    <small class="text-muted">
+
+                      ${gato.raza}
+                      ·
+                      ${gato.edad} años
+                      ·
+                      ${gato.peso} kg
+
+                    </small>
+
+                  </p>
+
+                  <p class="card-text">
+
+                    <small class="text-muted">
+
+                      Registrado:
+                      ${
+                        new Date(gato.fecha)
+                          .toLocaleDateString("es-ES")
+                      }
+
+                    </small>
+
+                  </p>
+
+
+                  <!-- =================================
+                       BOTÓN ACTUALIZAR
+                  ================================== -->
+
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm w-100"
+                    onclick="editarGato('${gato.id}')"
+                  >
+                    Actualizar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          `
+        ).join("");
+
+
+    } catch (error) {
+
+      console.error(
+        "Error:",
+        error
+      );
+
+
+      contenedor.innerHTML = `
+
+        <div class="col-12">
+
+          <div class="alert alert-danger text-center">
+
+            Error al cargar los gatos.
+            Intenta de nuevo.
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+  }
+
+
+  // =====================================================
+  // EDITAR GATO
+  // =====================================================
+
+  window.editarGato = async function(id) {
+
+    try {
+
+      // Obtener todos los gatos
+      const respuesta =
+        await fetch(
+          `${BACKEND_URL}/gatos`
+        );
+
+
+      const gatos =
+        await respuesta.json();
+
+
+      if (!respuesta.ok) {
+
+        throw new Error(
+          "No se pudieron obtener los gatos."
+        );
+
+      }
+
+
+      // Buscar el gato seleccionado
+      const gato =
+        gatos.find(
+          (g) => g.id === id
+        );
+
+
+      if (!gato) {
+
+        throw new Error(
+          "No se encontró el gato."
+        );
+
+      }
+
+
+      // =================================================
+      // LLENAR FORMULARIO
+      // =================================================
+
+      gatoId.value =
+        gato.id;
+
+      nombre.value =
+        gato.nombre;
+
+      edad.value =
+        gato.edad;
+
+      peso.value =
+        gato.peso;
+
+      raza.value =
+        gato.raza;
+
+
+      // =================================================
+      // MOSTRAR IMAGEN ACTUAL
+      // =================================================
+
+      if (gato.imagenUrl) {
+
+        preview.src =
+          gato.imagenUrl;
+
+        preview.style.display =
+          "block";
+
+      }
+
+
+      // =================================================
+      // CAMBIAR MODO DEL FORMULARIO
+      // =================================================
+
+      btnSubmit.textContent =
+        "Actualizar Gato";
+
+      btnSubmit.classList.remove(
+        "btn-primary"
+      );
+
+      btnSubmit.classList.add(
+        "btn-success"
+      );
+
+
+      btnCancelar.classList.remove(
+        "d-none"
+      );
+
+
+      // =================================================
+      // SCROLL HACIA EL FORMULARIO
+      // =================================================
+
+      document
+        .getElementById("formGato")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        "Error al editar:",
+        error
+      );
+
+
+      resultadoDiv.className =
+        "alert alert-danger mt-4";
+
+      resultadoDiv.textContent =
+        error.message;
+
+      resultadoDiv.style.display =
+        "block";
+
+    }
+
+  };
+
+
+  // =====================================================
+  // CANCELAR EDICIÓN
+  // =====================================================
+
+  btnCancelar.addEventListener(
+    "click",
+    () => {
+
+      limpiarFormulario();
+
+      resultadoDiv.style.display =
+        "none";
+
+    }
+  );
+
+
+  // =====================================================
+  // LIMPIAR FORMULARIO
+  // =====================================================
+
+  function limpiarFormulario() {
+
+    formGato.reset();
+
+    gatoId.value = "";
+
+    preview.src = "";
+
+    preview.style.display =
+      "none";
+
+
+    btnSubmit.textContent =
+      "Registrar Gato";
+
+
+    btnSubmit.classList.remove(
+      "btn-success"
+    );
+
+    btnSubmit.classList.add(
+      "btn-primary"
+    );
+
+
+    btnCancelar.classList.add(
+      "d-none"
+    );
+
+  }
+
+
+  // =====================================================
+  // BOTÓN ACTUALIZAR LISTA
+  // =====================================================
+
+  document
+    .getElementById("btnRecargar")
+    .addEventListener(
+      "click",
+      cargarGatos
+    );
+
+
+  // =====================================================
+  // CARGAR AL INICIAR
+  // =====================================================
+
+  cargarGatos();
+
+</script>
+
